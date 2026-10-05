@@ -1,0 +1,10 @@
+# Defaults applied on first build; edit via `idf.py menuconfig` -> "Smart Irrigation".
+CONFIG_IDF_TARGET="esp32"
+CONFIG_ESP_CONSOLE_UART_DEFAULT=y
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+CONFIG_ESP_TASK_WDT_TIMEOUT_S=10
+
+# Most ESP32 DevKit boards carry 4 MB flash. Use it, with the large single-app
+# partition layout (no OTA) so the ~1 MB firmware has headroom to grow.
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y

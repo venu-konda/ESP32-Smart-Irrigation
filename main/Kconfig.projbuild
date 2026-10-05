@@ -1,0 +1,80 @@
+menu "Smart Irrigation"
+
+    menu "Pins"
+        config IRRIG_SOIL_ADC_CHANNEL
+            int "Soil moisture ADC1 channel"
+            range 0 7
+            default 6
+            help
+                ADC1 channel wired to the capacitive soil-moisture sensor output.
+                On the ESP32 DevKit, channel 6 is GPIO34.
+
+        config IRRIG_SENSOR_POWER_GPIO
+            int "Sensor power GPIO (-1 = always powered)"
+            range -1 33
+            default 25
+            help
+                Drives the sensor's VCC through a GPIO so it is only powered while
+                sampling. Reduces electrode corrosion and current draw.
+
+        config IRRIG_PUMP_GPIO
+            int "Pump relay GPIO"
+            range 0 33
+            default 26
+
+        config IRRIG_PUMP_ACTIVE_LOW
+            bool "Pump relay is active-low"
+            default n
+            help
+                Enable for relay modules that switch on when the input is pulled low.
+
+        config IRRIG_TANK_SWITCH_GPIO
+            int "Tank float-switch GPIO (-1 = no switch)"
+            range -1 33
+            default 27
+            help
+                Uses the internal pull-up, so GPIO34-39 (no pull-ups) are excluded.
+
+        config IRRIG_TANK_SWITCH_ACTIVE_LOW
+            bool "Float switch reads LOW when water is present"
+            default y
+
+        config IRRIG_STATUS_LED_GPIO
+            int "Status LED GPIO"
+            range 0 33
+            default 2
+    endmenu
+
+    config IRRIG_ENABLE_NETWORK
+        bool "Enable Wi-Fi, SNTP time and MQTT telemetry"
+        default y
+
+    if IRRIG_ENABLE_NETWORK
+        config IRRIG_WIFI_SSID
+            string "Wi-Fi SSID"
+            default "myssid"
+
+        config IRRIG_WIFI_PASSWORD
+            string "Wi-Fi password"
+            default "mypassword"
+
+        config IRRIG_MQTT_URI
+            string "MQTT broker URI"
+            default "mqtt://192.168.1.10:1883"
+
+        config IRRIG_MQTT_BASE_TOPIC
+            string "MQTT base topic"
+            default "garden/irrigation"
+            help
+                Status is published to <base>/status, availability to <base>/online,
+                and commands are read from <base>/cmd.
+
+        config IRRIG_TZ
+            string "POSIX timezone string"
+            default "IST-5:30"
+            help
+                Used for the watering window. Examples: "IST-5:30", "UTC0",
+                "CET-1CEST,M3.5.0,M10.5.0/3".
+    endif
+
+endmenu
